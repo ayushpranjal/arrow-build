@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 env:
   CROSSBOW_GITHUB_TOKEN: ${{ secrets.CROSSBOW_GITHUB_TOKEN }}
-
+  ARCHERY_DEFAULT_BRANCH: 'master'
 jobs:
   trigger-crossbow:
     name: Trigger Crossbow
@@ -51,6 +51,11 @@ jobs:
           set -e
           pushd ..
           source /home/runner/miniconda3/bin/activate root
-          git clone -b aarch64_cpp https://github.com/ayushpranjal/arrow.git
+          git clone -b graviton_based_on_c2ad17b032 https://github.com/ayushpranjal/arrow.git
           pip install -e arrow/dev/archery[crossbow] 
+          echo GITHUB_WORKSPACE:$GITHUB_WORKSPACE
+          echo GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+          cd arrow-build
+          echo pwd
+          pwd
           archery crossbow --queue-path $GITHUB_WORKSPACE --queue-remote https://github.com/$GITHUB_REPOSITORY submit java-jars --job-prefix nightly
